@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: payment-service-route
+          uri: lb://payment-service
+          predicates:
+            - Path=/payments/{clientId}/latest
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: paymentServiceCB
+                fallbackUri: forward:/fallback/payments/{clientId}
